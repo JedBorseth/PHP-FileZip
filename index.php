@@ -22,8 +22,8 @@
 <!--Form Response -->
 <div class="grid grid-cols-4 place-items-center"><?php
 
-    if (isset($nameOfArchiveFolder) & isset($extractFolder)) {
-        cleanUp($nameOfArchiveFolder, $extractFolder);
+    if (isset($nameOfArchiveFolder) & isset($downloadFolder)) {
+        cleanUp($nameOfArchiveFolder, $downloadFolder);
     }
     global $errorMessage, $message;
 
@@ -129,7 +129,7 @@
         }
         foreach ($tempArr as $items) {
             if (!preg_match("/^\./", $items ) && mime_content_type("$editedPicturesDir/$items") === "image/jpeg") {
-                $imgEl = "<img src='./$editedPicturesDir/$items' alt='uploaded images with a watermark' class='border-t-4 border-blue-500'>";
+                $imgEl = "<img src='./$editedPicturesDir/$items' alt='uploaded images with a watermark' class='border-t-4 border-blue-500 w-1/2'>";
                 echo $imgEl;
             }
         }
@@ -141,16 +141,16 @@
         if (is_dir($folder1) & is_dir($folder2)) {
             $f1 = scandir($folder1);
             $f2 = scandir($folder2);
-            function delete($folder, $parent): void
-            {
-                foreach ($folder as $files) {
-                    if (is_file("$parent/$files")) {
-                        unlink("$parent/$files");
-                    }
-                }
-            }
             delete($f1, $folder1);
             delete($f2, $folder2);
+        }
+    }
+    function delete($folder, $parent): void
+    {
+        foreach ($folder as $files) {
+            if (is_file("$parent/$files")) {
+                unlink("$parent/$files");
+            }
         }
     }
     function downloadFinal($parentFolder)
@@ -192,4 +192,7 @@
 
 
 <?php
-
+if (isset($extractFolder) & isset($nameOfArchiveFolder)) {
+//    Change nothing to $extractFolder to delete pictures in the zip folder, unable to display on screen when deleted
+    cleanUp("nothing", $nameOfArchiveFolder);
+}
